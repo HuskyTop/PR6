@@ -12,7 +12,14 @@
 ### 1) Uninitialized variables
 #### Код:
 ```
+#include <stdio.h>
 
+int main(int argc, char const *argv[])
+{
+    int b;
+    printf("%d", b);
+    return 0;
+}
 ```
 #### Вивід Valgrind:
 ```
@@ -24,7 +31,19 @@ Use of uninitialised value of size 4
 ### 2) Out-of-bounds access
 #### Код:
 ```
+#include <stdio.h>
 
+int main(int argc, char const *argv[])
+{
+    char arr[10];
+    arr[1] = 'H';
+    arr[2] = 'e';
+    arr[3] = 'y';
+    arr[4] = '!';
+    
+    arr[15] = '$';
+    return 0;
+}
 ```
 #### Вивід Valgrind:
 ```
@@ -37,7 +56,15 @@ Invalid write of size 4
 ### 3) Memory leakage
 #### Код:
 ```
+#include <stdio.h>
+#include <stdlib.h>
 
+int main(int argc, char const *argv[])
+{
+    void *ptr = malloc(sizeof(long));
+    ptr = NULL;
+    return 0;
+}
 ```
 #### Вивід Valgrind:
 ```
@@ -50,7 +77,17 @@ LEAK SUMMARY
 ### 4) Use after free
 #### Код:
 ```
+#include <stdio.h>
+#include <stdlib.h>
 
+int main(int argc, char const *argv[])
+{
+    int *ptr = malloc(sizeof(long));
+    free(ptr);
+
+    *ptr = 103;
+    return 0;
+}
 ```
 #### Вивід Valgrind:
 ```
@@ -63,7 +100,17 @@ Invalid write of size 4
 ### 5) Double free
 #### Код:
 ```
+#include <stdio.h>
+#include <stdlib.h>
 
+int main(int argc, char const *argv[])
+{
+    int *ptr = malloc(sizeof(long));
+    
+    free(ptr);
+    free(ptr);
+    return 0;
+}
 ```
 #### Вивід Valgrind:
 ```
